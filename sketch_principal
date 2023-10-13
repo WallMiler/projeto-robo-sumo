@@ -1,0 +1,70 @@
+#include <PS4Controller.h>
+
+////////////////////////////////Definições entradas rodas esquerdas L298N//////////////////////////////////////////////
+#define left_in1 23
+#define left_in2 22
+
+////////////////////////////////Definições entradas rodas direitas L298N////////////////////////////////////////////////  
+#define right_in1 32
+#define right_in2 33
+
+void setup() {
+  Serial.begin(115200);
+  PS4.begin("bc:67:b2:36:7f:2a");
+
+///////////////////////////////Definições das direções dos pinos das rodas esquerdas////////////////////////////////////
+  pinMode(left_in1, OUTPUT);
+  pinMode(left_in2, OUTPUT);
+  
+
+///////////////////////////////Definições das direções dos pinos das rodas direitas/////////////////////////////////////
+  pinMode(right_in1, OUTPUT);
+  pinMode(right_in2, OUTPUT);
+}
+
+void loop() {
+
+  
+  if (PS4.isConnected()) {
+
+////////////////////////////////////////////////Move para trás//////////////////////////////////////////////////////////    
+    if (PS4.Square()){
+      digitalWrite(left_in1, HIGH);
+      digitalWrite(left_in2, LOW);
+      digitalWrite(right_in1, LOW);
+      digitalWrite(right_in2, HIGH);
+      
+    } 
+//////////////////////////////////////////////Move para Frente//////////////////////////////////////////////////////////
+      if (PS4.Cross()){
+      digitalWrite(left_in1, LOW);
+      digitalWrite(left_in2, HIGH);
+      digitalWrite(right_in1, HIGH);
+      digitalWrite(right_in2, LOW);
+      
+    } 
+    
+///////////////////////////Move rodas esquerda para frente e direita para tras para virar carrinho a direita////////////
+    if (PS4.Right()){
+      digitalWrite(left_in1, LOW);
+      digitalWrite(left_in2, HIGH);
+      digitalWrite(right_in1, LOW);
+      digitalWrite(right_in2, HIGH);
+    }
+    
+//////////////////////////////Move rodas esquerda para tras e direita para frente para virar carrinho a esquerda////////
+    if (PS4.Left()){
+      digitalWrite(right_in1, HIGH);
+      digitalWrite(right_in2, LOW);
+      digitalWrite(left_in1, HIGH);
+      digitalWrite(left_in2, LOW);
+    }
+//////////////////////Se nenhum botão for pressionado todas as saidas são puxadas para baixo/////////////////////////////
+    if(!PS4.Left() && !PS4.Right() && !PS4.Cross() && !PS4.Square()){
+      digitalWrite(left_in1, LOW);
+      digitalWrite(left_in2, LOW);
+      digitalWrite(right_in1, LOW);   
+      digitalWrite(right_in2, LOW); 
+    }
+  }
+}
